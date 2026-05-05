@@ -1,0 +1,15 @@
+pandas
+numpy
+yfinance
+tqdm
+python-dotenv
+torch
+torchvision
+torchaudio
+transformers
+scikit-learn
+groq
+openai
+spacy
+newsapi-python
+matplotlib

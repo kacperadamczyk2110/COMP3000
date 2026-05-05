@@ -1,0 +1,10 @@
+regime_General
+regime_Macro
+impact
+regime_Earnings
+s_val
+relevance
+regime_Crisis
+confidence
+regime_AI-Hype
+regime_Earnings/Macro

@@ -27,8 +27,8 @@ def run_final_academic_backtest():
     train_df = df.iloc[:split_idx].copy()
     test_df = df.iloc[split_idx:].copy()
     
-    print(f"🧠 Training on {len(train_df)} past days...")
-    print(f"🚀 Trading on {len(test_df)} unseen future days...")
+    print(f"Training on {len(train_df)} past days...")
+    print(f"Trading on {len(test_df)} unseen future days...")
     
     # 3. MODEL TRAINING 
     model = HistGradientBoostingClassifier(max_iter=200, max_depth=5, learning_rate=0.05, random_state=42)
@@ -96,7 +96,7 @@ def run_final_academic_backtest():
     plt.grid(True, alpha=0.2)
     plt.show()
 
-    print("\n--- OUT-OF-SAMPLE RESULTS (The 'Unseen' 30%) ---")
+    print("\nOUT-OF-SAMPLE RESULTS (The 'Unseen' 30%)")
     print(f"Buy and Hold Multiplier: {test_df['Buy_Hold'].iloc[-1]:.3f}x")
     print(f"AI Strategy Multiplier:  {test_df['AI_Strategy'].iloc[-1]:.3f}x")
 

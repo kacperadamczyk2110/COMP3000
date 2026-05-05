@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from sklearn.ensemble import HistGradientBoostingClassifier
 
 def plot_institutional_engine():
-    print("⚙️ Loading Data and Simulating Institutional Pipeline...")
+    print("Loading Data and Simulating Institutional Pipeline...")
     
     # 1. Load Data
     df = pd.read_csv('data/processed/feature_matrix.csv', index_col=0)
@@ -21,7 +21,7 @@ def plot_institutional_engine():
     ignore_cols = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume', 'forward_return', 'target', 'market_return']
     features = [c for c in df.columns if c not in ignore_cols]
     
-    print("🧠 Training Surrogate Probability Engine...")
+    print("Training Surrogate Probability Engine...")
     model = HistGradientBoostingClassifier(random_state=42)
     model.fit(df[features], df['target'])
     
@@ -79,31 +79,38 @@ def plot_institutional_engine():
     df['Institutional_Engine'] = (1 + df['ai_net_return'].fillna(0)).cumprod()
 
     # 6. PLOTTING
-    print("📊 Generating Visualizations...")
-    plt.figure(figsize=(14, 8), dpi=150)
+    print("📊 Generating Enhanced Visualizations...")
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 10), sharex=True, dpi=150)
     
-    # Chart 1: The Cumulative Returns
-    plt.subplot(2, 1, 1)
-    plt.plot(df.index, df['Buy_Hold'], label=f"NASDAQ Benchmark: {df['Buy_Hold'].iloc[-1]:.3f}x", color='black', alpha=0.4)
-    plt.plot(df.index, df['Institutional_Engine'], label=f"Institutional AI Engine: {df['Institutional_Engine'].iloc[-1]:.3f}x", color='#8e44ad', linewidth=2.5)
-    plt.title('Institutional Alpha Architecture: Simulated Dataset Performance', fontsize=15, fontweight='bold')
-    plt.ylabel('Growth Multiplier')
-    plt.legend(loc='upper left')
-    plt.grid(True, alpha=0.2)
-
-    # Chart 2: The Dynamic Capital Allocation
-    plt.subplot(2, 1, 2)
-    plt.fill_between(df.index, 0, df['final_allocation'], color='#9b59b6', alpha=0.5, label='Dynamic Portfolio Exposure (Kelly Sizing)')
+    # --- Chart 1: Cumulative Returns ---
+    ax1.plot(df.index, df['Buy_Hold'], label=f"NASDAQ (Benchmark)", color='black', alpha=0.3)
+    ax1.plot(df.index, df['Institutional_Engine'], label=f"AI Engine", color='#8e44ad', linewidth=2)
     
-    # Mark when the PCR Veto triggered (Forcing cash)
-    pcr_vetoes = df[df['simulated_pcr'] > 1.2].index
-    plt.scatter(pcr_vetoes, np.zeros(len(pcr_vetoes)), color='red', marker='x', alpha=0.5, label='Options Market Panic (Veto)')
+    # Highlight Veto zones on the main return chart
+    veto_zones = df[df['simulated_pcr'] > 1.2].index
+    for date in veto_zones:
+        ax1.axvspan(date, date + pd.Timedelta(days=1), color='red', alpha=0.1)
 
-    plt.axhline(1.0, color='red', linestyle='--', alpha=0.3, label='100% Cash Boundary (Margin Used Above)')
-    plt.ylabel('Allocation (1.0 = 100%)')
-    plt.ylim(0, 1.6)
-    plt.legend(loc='upper left')
-    plt.grid(True, alpha=0.2)
+    ax1.set_title('Institutional Alpha Architecture: Strategy vs. Benchmark', fontsize=14, fontweight='bold')
+    ax1.set_ylabel('Growth Multiplier')
+    ax1.legend(loc='upper left')
+    ax1.grid(True, alpha=0.15)
+
+    # --- Chart 2: Dynamic Allocation & Veto Intensity ---
+    ax2.fill_between(df.index, 0, df['final_allocation'], color='#9b59b6', alpha=0.4, label='Portfolio Exposure')
+    
+    # Use vertical spans for the Veto - much easier to see than 'x' markers
+    label_added = False
+    for date in veto_zones:
+        ax2.axvspan(date, date + pd.Timedelta(days=1), color='red', alpha=0.3, 
+                    label='Options Market Veto (Panic)' if not label_added else "")
+        label_added = True
+
+    ax2.axhline(1.0, color='black', linestyle='--', alpha=0.5, label='100% Equity (No Margin)')
+    ax2.set_ylabel('Allocation (1.5 = 150%)')
+    ax2.set_ylim(0, 1.7)
+    ax2.legend(loc='upper left')
+    ax2.grid(True, alpha=0.15)
 
     plt.tight_layout()
     plt.show()

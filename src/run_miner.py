@@ -21,11 +21,11 @@ def run_miner():
     start_date = datetime(2019, 6, 1)
     
     if not os.path.exists(input_file):
-        print(f"❌ Error: {input_file} not found.")
+        print(f"Error: {input_file} not found.")
         return
 
     file_size = os.path.getsize(input_file)
-    print(f"🚀 Mining 51 tickers from June 2019 (File Size: {file_size/1e9:.2f} GB)...")
+    print(f"Mining 51 tickers from June 2019 (File Size: {file_size/1e9:.2f} GB)...")
     
     count = 0
     with open(input_file, 'r', encoding='utf-8', errors='ignore') as f_in:
@@ -56,7 +56,7 @@ def run_miner():
                     continue
         pbar.close()
             
-    print(f"✨ Success! Extracted {count} context-rich rows to {output_file}")
+    print(f"Extracted {count} context-rich rows to {output_file}")
 
 if __name__ == "__main__":
     run_miner()

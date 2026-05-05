@@ -38,11 +38,11 @@ def run_finbert_pass(input_path, temp_path):
     del model
     del tokenizer
     torch.cuda.empty_cache()
-    print("✅ Pass 1 Complete. VRAM Cleared.")
+    print("Pass 1 Complete. VRAM Cleared.")
 
 # 2. PASS TWO: LLAMA METRICS
 def run_llama_pass(temp_path, final_path):
-    print("🚀 PASS 2: Local Llama Strategic Metrics...")
+    print("PASS 2: Local Llama Strategic Metrics...")
     client = OpenAI(base_url='http://localhost:11434/v1', api_key='ollama')
     
     df = pd.read_csv(temp_path)

@@ -1,12 +1,7 @@
-# Data files (Too large for Git)
 data/
 *.csv
 *.json
-
-# Environment/Private keys
 .env
 venv/
 __pycache__/
-
-# System files
 .DS_Store
